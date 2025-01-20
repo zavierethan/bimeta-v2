@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/var/www/html
     ports:
-      - "9002:9000"
+      - "8082:80"
     networks:
       - laravel
 

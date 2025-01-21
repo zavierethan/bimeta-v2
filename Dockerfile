@@ -1,52 +1,32 @@
-# Use official PHP Apache image
-FROM php:8.2-apache
+# Dockerfile for App2
+FROM php:8.1-apache
 
-# Install system dependencies, PostgreSQL extension, and Composer
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    git \
-    unzip && \
-    docker-php-ext-configure zip && \
-    docker-php-ext-install gd pdo pdo_pgsql pdo_mysql zip
+    libzip-dev unzip curl git \
+    && docker-php-ext-install pdo pdo_mysql zip
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Enable mod_rewrite for Apache
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Copy the Laravel project to the Apache web directory
-COPY . /var/www/html
-
-# Set working directory to Laravel project
+# Set the working directory
 WORKDIR /var/www/html
 
-RUN composer clear-cache
-RUN rm -rf vendor composer.lock
+# Copy application code
+COPY . /var/www/html
 
-# Run Composer install to install PHP dependencies
-RUN composer install --no-interaction --prefer-dist
-# Set file permissions
-RUN git config --global --add safe.directory /var/www/html
-RUN chown -R www-data:www-data /var/www/html
+# Install Laravel dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Set proper permissions for storage and bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set permissions for Laravel directories
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Configure Apache to use /public as the DocumentRoot
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        Options Indexes FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+# Expose port
+EXPOSE 8082
 
-# Expose port 80
-EXPOSE 80
-
+# Start Apache
+CMD ["apache2-foreground"]

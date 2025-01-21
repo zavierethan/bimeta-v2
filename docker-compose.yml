@@ -1,16 +1,18 @@
 version: '3.8'
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/var/www/html
+    container_name: bimeta-v2-app
     ports:
       - "8082:80"
+    volumes:
+      - ./code:/var/www/html
     networks:
-      - laravel
+      - bimeta-net
 
 networks:
-  laravel:
+  bimeta-net:
     driver: bridge

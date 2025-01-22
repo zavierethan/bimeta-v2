@@ -199,6 +199,10 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/detail/lampiran/save', [App\Http\Controllers\Transaction\DeliveryController::class, 'saveAttachmentsDetail'])->name('warehouse.delivery.detail.lampiran.save');
             Route::get('/detail/lampiran/delete/{id}', [App\Http\Controllers\Transaction\DeliveryController::class, 'deleteAttachmentsDetail'])->name('warehouse.delivery.detail.lampiran.delete');
+
+            // Generate manual surat jalan
+            Route::get('/create/manual', [App\Http\Controllers\Transaction\DeliveryController::class, 'createManualDelivery'])->name('warehouse.delivery.create.manual');
+            Route::post('/print/manual/', [App\Http\Controllers\Transaction\DeliveryController::class, 'printManual'])->name('warehouse.delivery.print.manual');
         });
 
         Route::prefix('raw-materials')->group(function () {

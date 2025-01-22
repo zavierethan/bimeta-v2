@@ -65,6 +65,10 @@ class DeliveryController extends Controller
         return view('transaction.warehouse.delivery.create', compact('salesOrders'));
     }
 
+    public function createManualDelivery() {
+        return view('transaction.warehouse.delivery.create-manual');
+    }
+
     public function save(Request $request) {
 
         $use_attachments = 0;
@@ -322,6 +326,41 @@ class DeliveryController extends Controller
         // Download the PDF
         return $pdf->stream($deliveryOrder->travel_permit_no.'.pdf');
     }
+
+    public function printManual(Request $request) {
+        $payloads = $request->all();
+
+        // Convert deliveryOrder to an object
+        $deliveryOrder = json_decode(json_encode($payloads['header'] ?? []));
+        $detailDeliveryOrder = array_map(fn($item) => (object) $item, $payloads['details'] ?? []);
+        $letterType = $deliveryOrder->letter_type ?? null;
+
+        // Determine the correct Blade template based on the letter type
+        $view = match ($letterType) {
+            'B' => 'transaction.warehouse.delivery.print.print-b',
+            'K' => 'transaction.warehouse.delivery.print.print-k',
+            'S' => 'transaction.warehouse.delivery.print.print-s',
+            default => null,
+        };
+
+        // Handle invalid letter type
+        if (!$view) {
+            return response()->json(['message' => 'Invalid letter type.'], 400);
+        }
+
+        // Generate the PDF
+        $pdf = PDF::loadView($view, [
+            'deliveryOrder' => $deliveryOrder,       // Object format
+            'detailDeliveryOrder' => $detailDeliveryOrder, // Array format
+        ])->setPaper('letter', 'portrait')->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+        ]);
+
+        // Stream the PDF to open in a new tab
+        return $pdf->stream($deliveryOrder->delivery_number ?? 'document.pdf');
+    }
+
 
     public function saveAttachmentsDetail(Request $request) {
 

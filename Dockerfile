@@ -35,6 +35,11 @@ RUN composer install --no-scripts --no-autoloader
 COPY package*.json ./
 RUN npm install
 
+# 
+# RUN apt install nano
+# RUN cp .env.example .env
+# RUN php artisan key:generate
+
 # Copy Laravel project files
 COPY . .
 

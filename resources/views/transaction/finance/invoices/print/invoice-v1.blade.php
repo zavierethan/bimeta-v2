@@ -153,8 +153,8 @@
                     <td style="border: 2px solid black; padding: 5px;text-align: center"><?php echo $no++; ?>.</td>
                     <td style="border: 2px solid black; text-align: center; padding: 10px;">{{$detail->goods_name}} <?php echo ($detail->type != "WASTE") ? "UK :".$detail->measure : ""; ?></td>
                     <td style="border: 2px solid black; text-align: center; padding: 10px;" class="quantity">{{$detail->quantity}}</td>
-                    <td style="border: 2px solid black; text-align: right; padding: 10px;" class="price">{{$detail->price}}</td>
-                    <td style="border: 2px solid black; text-align: right; padding: 10px;" class="total-price">{{$detail->total_price}}</td>
+                    <td style="border: 2px solid black; text-align: right; padding: 10px;" class="price"><?php echo number_format($detail->price, 2); ?></td>
+                    <td style="border: 2px solid black; text-align: right; padding: 10px;" class="total-price"><?php echo number_format($detail->total_price, 2); ?></td>
                 </tr>
                 @endforeach
             </tbody>
@@ -162,7 +162,7 @@
                 <tr>
                     <td colspan="4" style="border-bottom: 2px dotted black; padding: 5px;">Jumlah Harga jual /
                         Penggantian uang muka</td>
-                    <td style="border-bottom: 2px dotted black;border-left: 2px solid black; text-align: right; padding:10px;">{{$sub_total}}</td>
+                    <td style="border-bottom: 2px dotted black;border-left: 2px solid black; text-align: right; padding:10px;"><?php echo number_format($sub_total, 2); ?></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="border-bottom: 2px dotted black; padding: 5px;">Dikurangi Potongan Harga /
@@ -176,11 +176,11 @@
                 <tr>
                     <td colspan="4" style="border-bottom: 2px dotted black; padding: 5px;">PPN X 11% X Dasar Pengenaan
                         Pajak</td>
-                    <td style="border-bottom: 2px dotted black;border-left: 2px solid black; text-align: right; padding:10px;">{{$tax}}</td>
+                    <td style="border-bottom: 2px dotted black;border-left: 2px solid black; text-align: right; padding:10px;"><?php echo number_format($tax, 2); ?></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="border: 2px solid black; padding: 5px;text-align: right">TOTAL Rp.</td>
-                    <td style="border: 2px solid black; text-align: right; padding:10px;">{{$total_amount}}</td>
+                    <td style="border: 2px solid black; text-align: right; padding:10px;"><?php echo number_format($total_amount, 2); ?></td>
                 </tr>
             </tfoot>
         </table>

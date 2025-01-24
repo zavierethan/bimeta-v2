@@ -218,7 +218,7 @@ class InvoiceController extends Controller
         $poNos = $detailInvoice->pluck('ref_po_customer')->unique()->toArray();
         $poNosString = implode(', ', $poNos);
 
-        $subtotal = number_format($detailInvoice->sum('total_price'), 2, ',', '.');
+        $subtotal = $detailInvoice->sum('total_price');
 
         if($invoice->tax_type == 2 || $invoice->tax_type == 0) {
             $tax = 0;
@@ -245,8 +245,8 @@ class InvoiceController extends Controller
                 'travel_permit_no' => $travelPermitNosString,
                 'po_number' => $poNosString,
                 'sub_total' => $subtotal,
-                'tax' => number_format($tax, 2, ',', '.'),
-                'total_amount' => number_format($total_amount, 2, ',', '.')
+                'tax' => $tax,
+                'total_amount' => $total_amount
             ]);
         }
 

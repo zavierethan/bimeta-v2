@@ -397,6 +397,8 @@ class ProductionController extends Controller
             // Start a database transaction
             DB::beginTransaction();
 
+            $arr= [];
+
             // Save the transaction details
             foreach ($payloads['data'] as $detail) {
                 $spk = DB::table('transaction.t_spk')->insertGetid([
@@ -436,21 +438,21 @@ class ProductionController extends Controller
                     "created_by" => Auth::user()->name,
                 ]);
 
-                if($payloads['is_save_as_template'] == 1) {
+                array_push($arr, $spk);
+            }
 
-                    // $templateIsExists = DB::table('transaction.t_spk_templates')->where('goods_id', $payloads['goods_id'])->first();
+            if($payloads['is_save_as_template'] == 1) {
 
-                    // if(empty($templateIsExists)) {
-                    //     DB::table('transaction.t_spk_templates')->insert([
-                    //         "goods_id" => $payloads['goods_id'],
-                    //         "spk_id" => $spk
-                    //     ]);
-                    // }
+                $templateIsExists = DB::table('transaction.t_spk_templates')->where('goods_id', $payloads['goods_id'])->first();
 
-                    DB::table('transaction.t_spk_templates')->insert([
-                        "goods_id" => $payloads['goods_id'],
-                        "spk_id" => $spk
-                    ]);
+                if(empty($templateIsExists)) {
+
+                    foreach ($arr as $value) {
+                        DB::table('transaction.t_spk_templates')->insert([
+                            "goods_id" => $payloads['goods_id'],
+                            "spk_id" => $value
+                        ]);
+                    }
                 }
             }
 

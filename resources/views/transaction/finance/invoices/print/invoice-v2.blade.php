@@ -131,16 +131,16 @@
                     <td style="border: 2px solid black; text-align: center; padding: 10px;" class="quantity">
                         {{$detail->quantity}}</td>
                     <td style="border: 2px solid black; text-align: right; padding: 10px;" class="price">
-                        {{$detail->price}}</td>
+                        <?php echo number_format($detail->price, 2); ?></td>
                     <td style="border: 2px solid black; text-align: right; padding: 10px;" class="total-price">
-                        {{$detail->total_price}}</td>
+                        <?php echo number_format($detail->total_price, 2); ?></td>
                 </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="4" style="border: 2px solid black; padding: 5px;text-align: right">TOTAL Rp.</td>
-                    <td style="border: 2px solid black; text-align: right; padding: 10px;">{{$sub_total}}</td>
+                    <td style="border: 2px solid black; text-align: right; padding: 10px;"><?php echo number_format($sub_total, 2); ?></td>
                 </tr>
             </tfoot>
         </table>

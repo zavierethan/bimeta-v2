@@ -68,73 +68,7 @@ background-size: 18px;
                         </div>
                         <div class="form-inline mt-5">
                             <label for="vertical-form-1" class="sm:w-32 font-bold">Qty Pesanan</label>
-                            <input type="text" class="form-control" id="order-quantity"
-                                value="{{$goodsInformations->quantity}}" readonly>
-
-                            <input type="hidden" class="form-control" id="type" value="{{$goodsInformations->type}}">
-
-                            @if($goodsInformations->type == 'A' || $goodsInformations->type == 'B')
-                            <input type="hidden" class="form-control" id="ply-type"
-                                value="{{$spec_details[0]->ply_type}}">
-                            <input type="hidden" class="form-control" id="flute-type"
-                                value="{{$spec_details[0]->flute_type}}">
-                            <input type="hidden" class="form-control" id="substance"
-                                value="{{$spec_details[0]->substance}}">
-                            <input type="hidden" class="form-control" id="meas-unit"
-                                value="{{$spec_details[0]->measure_unit}}">
-                            <input type="hidden" class="form-control" id="meas-type"
-                                value="{{$spec_details[0]->measure_type}}">
-                            <input type="hidden" class="form-control" id="length" value="{{$spec_details[0]->length}}">
-                            <input type="hidden" class="form-control" id="width" value="{{$spec_details[0]->width}}">
-                            <input type="hidden" class="form-control" id="height" value="{{$spec_details[0]->height}}">
-                            @endif
-
-                            @if($goodsInformations->type == 'AB' || $goodsInformations->type == 'BB')
-                            <input type="hidden" class="form-control" id="top-ply-type"
-                                value="{{$spec_details[0]->ply_type}}">
-                            <input type="hidden" class="form-control" id="top-flute-type"
-                                value="{{$spec_details[0]->flute_type}}">
-                            <input type="hidden" class="form-control" id="top-substance"
-                                value="{{$spec_details[0]->substance}}">
-                            <input type="hidden" class="form-control" id="top-meas-unit"
-                                value="{{$spec_details[0]->measure_unit}}">
-                            <input type="hidden" class="form-control" id="top-length"
-                                value="{{$spec_details[0]->length}}">
-                            <input type="hidden" class="form-control" id="top-width"
-                                value="{{$spec_details[0]->width}}">
-                            <input type="hidden" class="form-control" id="top-height"
-                                value="{{$spec_details[0]->height}}">
-
-                            <input type="hidden" class="form-control" id="bottom-ply-type"
-                                value="{{$spec_details[1]->ply_type}}">
-                            <input type="hidden" class="form-control" id="bottom-flute-type"
-                                value="{{$spec_details[1]->flute_type}}">
-                            <input type="hidden" class="form-control" id="bottom-substance"
-                                value="{{$spec_details[1]->substance}}">
-                            <input type="hidden" class="form-control" id="bottom-meas-unit"
-                                value="{{$spec_details[1]->measure_unit}}">
-                            <input type="hidden" class="form-control" id="bottom-length"
-                                value="{{$spec_details[1]->length}}">
-                            <input type="hidden" class="form-control" id="bottom-width"
-                                value="{{$spec_details[1]->width}}">
-                            <input type="hidden" class="form-control" id="bottom-height"
-                                value="{{$spec_details[1]->height}}">
-                            @endif
-
-                            @if($goodsInformations->type == 'ROLL')
-                            <input type="hidden" class="form-control" id="ply-type"
-                                value="{{$spec_details[0]->ply_type}}">
-                            <input type="hidden" class="form-control" id="flute-type"
-                                value="{{$spec_details[0]->flute_type}}">
-                            <input type="hidden" class="form-control" id="substance"
-                                value="{{$spec_details[0]->substance}}">
-                            <input type="hidden" class="form-control" id="meas-unit"
-                                value="{{$spec_details[0]->measure_unit}}">
-                            <input type="hidden" class="form-control" id="meas-type"
-                                value="{{$spec_details[0]->measure_type}}">
-                            <input type="hidden" class="form-control" id="width" value="{{$spec_details[0]->width}}">
-                            @endif
-
+                            <input type="text" class="form-control" id="order-quantity" value="{{$goodsInformations->quantity}}" readonly>
                         </div>
                         <div class="form-inline mt-5">
                             <label for="vertical-form-1" class="sm:w-46 font-bold mr-3">Simpan Template ?</label>

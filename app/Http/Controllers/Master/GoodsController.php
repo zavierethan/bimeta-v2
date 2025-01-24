@@ -10,11 +10,35 @@ use Auth;
 class GoodsController extends Controller
 {
     public function index() {
+        return view('master.goods.index');
+    }
 
-        $substances = DB::table('master.m_substance')->orderBy('id', 'desc')->get();
-        $data = DB::table('master.goods AS goods')->orderBy('id', 'desc')->get();
+    public function getLists(Request $request) {
+        $params = $request->all();
 
-        return view('master.goods.index', compact('data', 'substances'));
+        $query = DB::table('master.goods as goods');
+
+        // Apply global search if provided
+        $searchValue = $request->input('search.value'); // This is where DataTables sends the search input
+        if (!empty($searchValue)) {
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('goods.code', 'like', '%' . strtoupper($searchValue) . '%');
+            });
+        }
+
+        $start = $request->input('start', 0);
+        $length = $request->input('length', 10);
+
+        $totalRecords = $query->count();
+        $filteredRecords = $query->count();
+        $data = $query->orderBy('id', 'desc')->skip($start)->take($length)->get();
+
+        return response()->json([
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data
+        ]);
     }
 
     public function create() {
@@ -27,33 +51,24 @@ class GoodsController extends Controller
         try {
             DB::beginTransaction();
 
-            $formData = $request->all();
+            $formData = $request["header"];
 
-            $specifications = $formData["specifications"];
+            // Check if the code already exists
+            $exists = DB::table('master.goods')->where('code', $formData["code"])->exists();
 
-            $inf = DB::table('master.goods')->insertGetId([
+            if ($exists) {
+                return response()->json([
+                    "error" => "Kode barang sudah pernah digunakan"
+                ], 400); // 400 Bad Request
+            }
+
+            DB::table('master.goods')->insertGetId([
                 "code" => $formData["code"],
                 "name" => $formData["name"],
                 "type" => $formData["type"],
                 "spec_str" => $formData["spec_str"],
                 "meas_str" => $formData["meas_str"],
-                // "price" => $formData["price"],
             ]);
-
-            foreach($specifications as $item) {
-                DB::table('master.goods_spec_details')->insert([
-                    "goods_id" => $inf,
-                    "ply_type" => $item["ply_type"],
-                    "flute_type" => $item["flute_type"],
-                    "substance" => $item["substance"],
-                    "length" => $item["length"],
-                    "width" => $item["width"],
-                    "height" => $item["height"],
-                    "measure_unit" => $item["measure_unit"],
-                    "measure_type" => $item["measure_type"],
-                    "part_code" => $item["part_code"],
-                ]);
-            }
 
             DB::commit();
 
@@ -71,53 +86,44 @@ class GoodsController extends Controller
 
     public function edit($id) {
         $goods = DB::table('master.goods')->where('id', $id)->first();
-        $specifications = DB::table('master.goods_spec_details')->where('goods_id', $id)->get();
-        $substances = DB::table('master.m_substance')->orderBy('id', 'ASC')->get();
-        return view('master.goods.edit', compact('goods', 'substances', 'specifications'));
+        return view('master.goods.edit', compact('goods'));
     }
 
     public function update(Request $request) {
 
-        DB::table('master.goods')->where('id', $request->id)->update([
-            "code" => $request->code,
-            "name" => $request->name,
-            "type" => $request->type,
-            "spec_str" => $request->spec_str,
-            "meas_str" => $request->meas_str,
-            // "price" => $request->price,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('master.goods.index');
-    }
+            $formData = $request["header"];
 
-    public function detailEdit(Request $request) {
+            // Check if the code already exists
+            $exists = DB::table('master.goods')->where('code', $formData["code"])->exists();
 
-        $data = DB::table('master.goods_spec_details')->where('id', $request->id)->first();
+            if ($exists) {
+                return response()->json([
+                    "error" => "Kode barang sudah pernah digunakan"
+                ], 400); // 400 Bad Request
+            }
 
-        return response()->json([
-            "data" => $data
-        ], 200);
-    }
+            DB::table('master.goods')->where('id', $formData["id"])->update([
+                "code" => $formData["code"],
+                "name" => $formData["name"],
+                "type" => $formData["type"],
+                "spec_str" => $formData["spec_str"],
+                "meas_str" => $formData["meas_str"],
+            ]);
 
-    public function detailUpdate(Request $request) {
+            DB::commit();
 
-        DB::table('master.goods_spec_details')->where('id', $request->id)->update([
-            "ply_type" => $request->ply_type,
-            "flute_type" => $request->flute_type,
-            "substance" => $request->substance,
-            "length" => $request->length,
-            "width" => $request->width,
-            "height" => $request->height,
-            "measure_unit" => $request->measure_unit,
-            "measure_type" => $request->measure_type,
-            "part_code" => $request->part_code,
-        ]);
+            return response()->json([
+                "message" => "Data successfully updated."
+            ], 200);
 
-        return redirect()->back();
-    }
+        } catch (\Exception $e) {
 
-    public function detailDelete($id) {
-        DB::table('master.goods_spec_details')->where('id', $id)->delete();
-        return redirect()->back();
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+
+        }
     }
 }

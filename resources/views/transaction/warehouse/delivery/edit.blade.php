@@ -67,6 +67,7 @@
                         </select>
                     </div>
                     <div class="flex justify-end flex-col md:flex-row gap-2 mt-5">
+                            <a href="{{route('warehouse.delivery.index')}}" class="btn btn-danger w-full md:w-52">Kembali</a>
                             <button type="submit" class="btn btn-primary w-full md:w-52">Update</button>
                     </div>
                 </form>

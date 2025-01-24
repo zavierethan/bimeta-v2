@@ -12,6 +12,7 @@
             <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                 <a href="javascript:;" class="btn btn-primary shadow-md mr-2 md:w-32" id="mass-print">Print</a>
                 <a href="javascript:;" class="btn btn-primary shadow-md mr-2 md:w-32">Export</a>
+                <a href="javascript:;" class="btn btn-primary shadow-md mr-2">Buat SPK Manual</a>
             </div>
         </div>
         <!-- BEGIN: Data List -->

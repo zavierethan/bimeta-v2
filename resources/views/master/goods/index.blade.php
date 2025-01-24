@@ -27,22 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data as $item)
-                    <tr>
-                        <td>{{$item->code}}</td>
-                        <td>{{$item->name}}</td>
-                        <td class="text-center">{{$item->type}}</td>
-                        <td>{{$item->spec_str}}</td>
-                        <td>{{$item->meas_str}}</td>
-                        <td class="table-report__action w-56">
-                            <div class="flex justify-center items-center">
-                                <a class="flex items-center mr-3 text-primary"
-                                    href="{{route('master.goods.edit', ['id' => $item->id])}}"> <i data-lucide="edit"
-                                        class="w-4 h-4 mr-1"></i> Edit </a>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -54,7 +39,57 @@
 @section('script')
 <script>
 $(function() {
-    $('#data-table').DataTable();
+    $('#data-table').DataTable({
+        order: [
+            [0, 'desc']
+        ],
+        processing: true,
+        serverSide: true,
+        paging: true, // Enable pagination
+        pageLength: 10, // Number of rows per page
+        ajax: {
+            url: `{{route('master.goods.get-lists')}}`, // Replace with your route
+            type: 'GET',
+            dataSrc: function(json) {
+                return json.data; // Map the 'data' field
+            }
+        },
+        columns: [{
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'type',
+                name: 'type',
+                className: 'text-center'
+            },
+            {
+                data: 'spec_str',
+                name: 'spec_str'
+            },
+            {
+                data: 'meas_str',
+                name: 'meas_str'
+            },
+            {
+                data: null, // No direct field from the server
+                name: 'action',
+                orderable: false, // Disable ordering for this column
+                searchable: false, // Disable searching for this column
+                render: function(data, type, row) {
+                    return `
+                        <div class="text-center">
+                            <a href="/master/goods/${row.id}" class="btn btn-sm btn-light btn-active-light-primary">Edit</a>
+                        <div>
+                    `;
+                }
+            }
+        ]
+    });
 });
 </script>
 @endsection

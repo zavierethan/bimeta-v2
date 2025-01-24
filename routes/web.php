@@ -24,14 +24,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('goods')->group(function () {
             Route::get('/', [App\Http\Controllers\Master\GoodsController::class, 'index'])->name('master.goods.index');
+            Route::get('/lists', [App\Http\Controllers\Master\GoodsController::class, 'getLists'])->name('master.goods.get-lists');
             Route::get('/create', [App\Http\Controllers\Master\GoodsController::class, 'create'])->name('master.goods.create');
             Route::post('/save', [App\Http\Controllers\Master\GoodsController::class, 'save'])->name('master.goods.save');
             Route::get('/{id}', [App\Http\Controllers\Master\GoodsController::class, 'edit'])->name('master.goods.edit');
             Route::post('/update', [App\Http\Controllers\Master\GoodsController::class, 'update'])->name('master.goods.update');
-
-            Route::post('/detail/edit', [App\Http\Controllers\Master\GoodsController::class, 'detailEdit'])->name('master.goods.detail.edit');
-            Route::post('/detail/update', [App\Http\Controllers\Master\GoodsController::class, 'detailUpdate'])->name('master.goods.detail.update');
-            Route::get('/detail/delete/{id}', [App\Http\Controllers\Master\GoodsController::class, 'detailDelete'])->name('master.goods.detail.delete');
         });
 
         Route::prefix('customers')->group(function () {

@@ -102,7 +102,11 @@
                         </div>
                     </div>
                     <div class="flex items-center border-b border-slate-200/60 dark:border-darkmode-400 pb-5 mb-5">
-                        <button id="update" class="flex items-center ml-auto text-white btn btn-primary shadow-md"><i data-lucide="refresh-ccw" class="w-4 h-4 mr-2"></i>Perbaharui</button>
+
+                    </div>
+                    <div class="flex justify-end items-center space-x-4">
+                        <a href="{{route('sales.index')}}" class="btn btn-danger w-full md:w-52">Kembali</a>
+                        <button id="update" class="flex items-center ml-auto text-white btn btn-primary shadow-md md:w-52">Perbaharui</button>
                     </div>
                 </form>
             </div>
